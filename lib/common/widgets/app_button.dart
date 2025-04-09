@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truck_management_app/common/bloc/button/button_state.dart';
 import 'package:truck_management_app/common/bloc/button/button_state_cubit.dart';
 import 'package:truck_management_app/core/constants/app_colors.dart';
+import 'package:truck_management_app/core/constants/app_sizes.dart';
 
 class AppButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -66,6 +67,7 @@ class AppButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
+        padding: EdgeInsets.all(AppSizes.paddingSL),
         shape:
             borderRadius != null
                 ? RoundedRectangleBorder(
@@ -73,10 +75,7 @@ class AppButton extends StatelessWidget {
                 )
                 : null,
       ),
-      child: const CircularProgressIndicator(
-        padding: EdgeInsets.all(10),
-        color: AppColors.primaryBlue,
-      ),
+      child: const CircularProgressIndicator(color: AppColors.primaryBlue),
     );
   }
 }
