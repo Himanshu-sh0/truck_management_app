@@ -4,6 +4,7 @@ import 'package:truck_management_app/common/bloc/button/button_state.dart';
 import 'package:truck_management_app/common/bloc/button/button_state_cubit.dart';
 import 'package:truck_management_app/common/widgets/app_button.dart';
 import 'package:truck_management_app/common/widgets/dismiss_keyboard_wrapper.dart';
+import 'package:truck_management_app/core/error/failures.dart';
 import 'package:truck_management_app/service_locator.dart';
 import 'package:truck_management_app/features/auth/data/models/signup_req_params.dart';
 import 'package:truck_management_app/features/auth/domain/usecases/signup.dart';
@@ -71,11 +72,11 @@ class _SignupPageState extends State<SignupPage> {
         listener: (context, state) {
           if (state is ButtonSuccessState) {
             context.read<AuthStateCubit>().signInSuccess();
-          } else if (state is ButtonFailureState) {
-            var snackBar = SnackBar(content: Text(state.errorMessage));
+          } else if (state is ButtonFailureState &&
+              state.error is GeneralFailure) {
+            var snackBar = SnackBar(content: Text(state.error.message));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-          
         },
         child: Scaffold(
           resizeToAvoidBottomInset: true,
@@ -125,29 +126,38 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                       const SizedBox(height: AppSizes.spacingM),
-                      TextFormField(
-                        controller: _passwordController,
-                        validator: AuthValidators.validatePassword,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        obscureText: _obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: AppColors.secondaryGray,
+                      BlocBuilder<ButtonStateCubit, ButtonState>(
+                        builder: (context, state) {
+                          return TextFormField(
+                            controller: _passwordController,
+                            validator: AuthValidators.validatePassword,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            obscureText: _obscurePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              errorText:
+                                  state is ButtonFailureState &&
+                                          state.error is AuthFailure
+                                      ? state.error.message
+                                      : null,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: AppColors.secondaryGray,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
-                        ),
+                          );
+                        },
                       ),
-
                       const SizedBox(height: AppSizes.spacingM),
                       Row(
                         children: [

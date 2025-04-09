@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truck_management_app/common/bloc/button/button_state.dart';
 import 'package:truck_management_app/common/bloc/button/button_state_cubit.dart';
 import 'package:truck_management_app/common/widgets/app_button.dart';
+import 'package:truck_management_app/core/error/failures.dart';
 import 'package:truck_management_app/features/auth/data/models/signin_req_params.dart';
 import 'package:truck_management_app/features/auth/domain/usecases/signin.dart';
 import 'package:truck_management_app/features/auth/presentation/bloc/auth_state_cubit.dart';
@@ -57,8 +58,9 @@ class _SigninPageState extends State<SigninPage> {
         listener: (context, state) {
           if (state is ButtonSuccessState) {
             context.read<AuthStateCubit>().signInSuccess();
-          } else if (state is ButtonFailureState) {
-            var snackBar = SnackBar(content: Text(state.errorMessage));
+          } else if (state is ButtonFailureState &&
+              state.error is GeneralFailure) {
+            var snackBar = SnackBar(content: Text(state.error.message));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         },
@@ -98,31 +100,39 @@ class _SigninPageState extends State<SigninPage> {
                         ),
                       ),
                       const SizedBox(height: AppSizes.spacingM),
-                      TextFormField(
-                        controller: _passwordController,
-                        validator:
-                            (value) => AuthValidators.validatePassword(
-                              value,
-                              isLogin: true,
+                      BlocBuilder<ButtonStateCubit, ButtonState>(
+                        builder: (context, state) {
+                          return TextFormField(
+                            controller: _passwordController,
+                            validator:
+                                (value) => AuthValidators.validatePassword(
+                                  value,
+                                  isLogin: true,
+                                ),
+                            obscureText: _obscurePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              errorText:
+                                  state is ButtonFailureState &&
+                                          state.error is AuthFailure
+                                      ? state.error.message
+                                      : null,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: AppColors.secondaryGray,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
                             ),
-                        obscureText: _obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: AppColors.secondaryGray,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
-                        ),
+                          );
+                        },
                       ),
                       Align(
                         alignment: Alignment.centerRight,
