@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truck_management_app/common/bloc/button/button_state.dart';
+import 'package:truck_management_app/core/error/failures.dart';
 import 'package:truck_management_app/core/usecases/usecase.dart';
 
 class ButtonStateCubit extends Cubit<ButtonState> {
@@ -12,14 +13,14 @@ class ButtonStateCubit extends Cubit<ButtonState> {
       final result = await usecase.call(params);
       result.fold(
         (failure) {
-          emit(ButtonFailureState(errorMessage: failure.message));
+          emit(ButtonFailureState(error: failure));
         },
         (success) {
           emit(ButtonSuccessState());
         },
       );
     } catch (e) {
-      emit(ButtonFailureState(errorMessage: e.toString()));
+      emit(ButtonFailureState(error: GeneralFailure(e.toString())));
     }
   }
 }
