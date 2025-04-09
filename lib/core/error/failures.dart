@@ -21,3 +21,9 @@ class StorageFailure implements Failure {
   final String message;
   StorageFailure(this.message);
 }
+
+class GeneralFailure implements Failure {
+  @override
+  final String message;
+  GeneralFailure(this.message);
+}
