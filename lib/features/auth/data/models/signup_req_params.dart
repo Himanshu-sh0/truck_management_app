@@ -1,7 +1,7 @@
 import 'package:truck_management_app/features/auth/domain/entities/signup_req_params.dart';
 
-class SignupReqParams extends SignupReqParamsEntity {
-  SignupReqParams({
+class SignupReqParamsModel extends SignupReqParams {
+  SignupReqParamsModel({
     required super.email,
     required super.password,
     required super.passwordConfirmation,
@@ -15,4 +15,14 @@ class SignupReqParams extends SignupReqParamsEntity {
       'password_confirmation': passwordConfirmation,
     },
   };
+
+  factory SignupReqParamsModel.fromEntity(
+    SignupReqParams entity,
+  ) {
+    return SignupReqParamsModel(
+      email: entity.email,
+      password: entity.password,
+      passwordConfirmation: entity.passwordConfirmation,
+    );
+  }
 }

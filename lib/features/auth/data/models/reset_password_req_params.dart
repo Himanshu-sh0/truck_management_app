@@ -1,7 +1,7 @@
 import 'package:truck_management_app/features/auth/domain/entities/reset_password_req_params.dart';
 
-class ResetPasswordReqParams extends ResetPasswordReqParamsEntity {
-  ResetPasswordReqParams({
+class ResetPasswordReqParamsModel  extends ResetPasswordReqParams {
+  ResetPasswordReqParamsModel({
     required super.password,
     required super.passwordConfirmation,
   });
@@ -12,4 +12,13 @@ class ResetPasswordReqParams extends ResetPasswordReqParamsEntity {
       "password_confirmation": passwordConfirmation,
     },
   };
+
+  factory ResetPasswordReqParamsModel.fromEntity(
+    ResetPasswordReqParams entity,
+  ) {
+    return ResetPasswordReqParamsModel(
+      password: entity.password,
+      passwordConfirmation: entity.passwordConfirmation,
+    );
+  }
 }
