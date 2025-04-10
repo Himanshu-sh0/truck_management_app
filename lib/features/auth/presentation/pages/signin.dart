@@ -4,7 +4,7 @@ import 'package:truck_management_app/common/bloc/button/button_state.dart';
 import 'package:truck_management_app/common/bloc/button/button_state_cubit.dart';
 import 'package:truck_management_app/common/widgets/app_button.dart';
 import 'package:truck_management_app/core/error/failures.dart';
-import 'package:truck_management_app/features/auth/data/models/signin_req_params.dart';
+import 'package:truck_management_app/features/auth/domain/entities/signin_req_params.dart';
 import 'package:truck_management_app/features/auth/domain/usecases/signin.dart';
 import 'package:truck_management_app/features/auth/presentation/bloc/auth_state_cubit.dart';
 import 'package:truck_management_app/service_locator.dart';

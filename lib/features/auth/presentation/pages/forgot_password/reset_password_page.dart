@@ -4,7 +4,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/util/validators/auth_validators.dart';
 import '../../../../../common/widgets/dismiss_keyboard_wrapper.dart';
-import '../../../../../features/auth/data/models/reset_password_req_params.dart';
+import '../../../../../features/auth/domain/entities/reset_password_req_params.dart';
 import '../../../../../features/auth/domain/usecases/reset_password.dart';
 
 class ResetPasswordPage extends StatefulWidget {

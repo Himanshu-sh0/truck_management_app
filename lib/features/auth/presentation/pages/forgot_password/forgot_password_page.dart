@@ -3,7 +3,7 @@ import 'package:truck_management_app/service_locator.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/util/validators/auth_validators.dart';
 import '../../../../../common/widgets/dismiss_keyboard_wrapper.dart';
-import '../../../../../features/auth/data/models/forgot_password_req_params.dart';
+import '../../../../../features/auth/domain/entities/forgot_password_req_params.dart';
 import '../../../../../features/auth/domain/usecases/forgot_password.dart';
 import 'reset_password_page.dart';
 
