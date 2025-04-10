@@ -1,29 +1,29 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:truck_management_app/core/constants/api_urls.dart';
-import 'package:truck_management_app/core/error/failures.dart';
-import 'package:truck_management_app/service_locator.dart';
 import 'package:truck_management_app/core/network/api/dio_client.dart';
+import 'package:truck_management_app/core/util/helpers/exception_capture.dart';
 import 'package:truck_management_app/features/auth/data/models/forgot_password_req_params.dart';
 import 'package:truck_management_app/features/auth/data/models/reset_password_req_params.dart';
 import 'package:truck_management_app/features/auth/data/models/signin_req_params.dart';
 import 'package:truck_management_app/features/auth/data/models/signup_req_params.dart';
+import 'package:truck_management_app/service_locator.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<Either> signIn(SigninReqParams params);
+  Future<Either> signIn(SigninReqParamsModel params);
 
-  Future<Either> signUp(SignupReqParams params);
+  Future<Either> signUp(SignupReqParamsModel params);
 
   Future<Either> signOut();
 
-  Future<Either> resetPassword(ResetPasswordReqParams params);
+  Future<Either> resetPassword(ResetPasswordReqParamsModel params);
 
-  Future<Either> forgotPassword(ForgotPasswordReqParams params);
+  Future<Either> forgotPassword(ForgotPasswordReqParamsModel params);
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   @override
-  Future<Either> signIn(SigninReqParams params) async {
+  Future<Either> signIn(SigninReqParamsModel params) async {
     try {
       final response = await getIt<DioClient>().post(
         ApiUrls.baseUrl + ApiUrls.signInPath,
@@ -31,12 +31,12 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       );
       return Right(response.data);
     } on DioException catch (e) {
-      return _exceptionCapture(e, "Authenticating the device");
+      return exceptionCapture(e, "Authenticating the device");
     }
   }
 
   @override
-  Future<Either> signUp(SignupReqParams params) async {
+  Future<Either> signUp(SignupReqParamsModel params) async {
     try {
       final response = await getIt<DioClient>().post(
         ApiUrls.baseUrl + ApiUrls.signUpPath,
@@ -44,7 +44,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       );
       return Right(response.data);
     } on DioException catch (e) {
-      return _exceptionCapture(e, "Creating the account");
+      return exceptionCapture(e, "Creating the account");
     }
   }
 
@@ -54,7 +54,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }
 
   @override
-  Future<Either> resetPassword(ResetPasswordReqParams params) async {
+  Future<Either> resetPassword(ResetPasswordReqParamsModel params) async {
     try {
       final response = await getIt<DioClient>().post(
         ApiUrls.baseUrl + ApiUrls.resetPasswordPath,
@@ -62,12 +62,12 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       );
       return Right(response.data);
     } on DioException catch (e) {
-      return _exceptionCapture(e, "Resetting the password");
+      return exceptionCapture(e, "Resetting the password");
     }
   }
 
   @override
-  Future<Either> forgotPassword(ForgotPasswordReqParams params) async {
+  Future<Either> forgotPassword(ForgotPasswordReqParamsModel params) async {
     try {
       final response = await getIt<DioClient>().post(
         ApiUrls.baseUrl + ApiUrls.forgotPasswordPath,
@@ -75,18 +75,8 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       );
       return Right(response.data);
     } on DioException catch (e) {
-      return _exceptionCapture(e, "Forgetting the password");
+      return exceptionCapture(e, "Forgetting the password");
     }
   }
 }
 
-Left _exceptionCapture(DioException e, String action) {
-  final data = e.response?.data;
-  final errorMessage = 'There is an issue $action. Please try again.';
-  if (data == null) {
-    return Left(GeneralFailure(errorMessage));
-  }
-  return data.containsKey('message')
-      ? Left(AuthFailure(data['message']))
-      : Left(GeneralFailure(errorMessage));
-}
