@@ -1,6 +1,6 @@
-class SigninReqParamsEntity {
+class SigninReqParams {
   final String email;
   final String password;
 
-  SigninReqParamsEntity({required this.email, required this.password});
+  SigninReqParams({required this.email, required this.password});
 }

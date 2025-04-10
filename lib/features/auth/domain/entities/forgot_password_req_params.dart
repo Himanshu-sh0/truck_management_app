@@ -1,5 +1,5 @@
-class ForgotPasswordReqParamsEntity {
+class ForgotPasswordReqParams {
   final String email;
 
-  ForgotPasswordReqParamsEntity({required this.email});
+  ForgotPasswordReqParams({required this.email});
 }

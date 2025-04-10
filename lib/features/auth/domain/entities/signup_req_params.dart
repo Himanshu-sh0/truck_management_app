@@ -1,10 +1,10 @@
-class SignupReqParamsEntity {
+class SignupReqParams {
   // final String name;
   final String email;
   final String password;
   final String passwordConfirmation;
 
-  SignupReqParamsEntity({
+  SignupReqParams({
     // required this.name,
     required this.email,
     required this.password,

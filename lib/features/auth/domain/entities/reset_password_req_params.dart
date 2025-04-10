@@ -1,8 +1,8 @@
-class ResetPasswordReqParamsEntity {
+class ResetPasswordReqParams {
   final String password;
   final String passwordConfirmation;
 
-  ResetPasswordReqParamsEntity({
+  ResetPasswordReqParams({
     required this.password,
     required this.passwordConfirmation,
   });
